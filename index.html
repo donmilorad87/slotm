@@ -5,8 +5,10 @@
     <title>Slot Mašina || Blazing Sun </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script type="module" async src="assets/script/script.js"></script>
-    <link rel="stylesheet" type="text/css" href="assets/style/style.css" />
+    
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script type="module" async src="assets/script/script.js"></script>
+    
 	
 	<link rel="shortcut icon" href="assets/img/blazingSun.ico">
 </head>
@@ -14,7 +16,7 @@
 <body>
 
     <header>
-	<a href="https://blazingsun.space" style="position: absolute;left: 16px;top: 16px;"><canvas id="canvasLogo" width="64" height="64"></canvas></a>
+		<a href="https://blazingsun.space" style="position: absolute;left: 16px;top: 16px;"><img style="height:4em;" src="https://blazingsun.space/assets/images/blazingSun.gif"></a>
         <div id="buttonContainer">
             <button id="pokreniIgru" >Pokreni Igru</button>
             <div class="progresCont">
@@ -26,6 +28,7 @@
         <div class="doigSpin">Odigrano spinova: <span id="odSpin">0</span></div>
     </header>
     <nav>
+	<div class="navdiv">
         <button id="bet-button">Ulog</button>
         <div>
             <div class="cosma cz" id="cosma1" style="background: lightgreen;">
@@ -45,13 +48,13 @@
                 <label for="bet4">5 $</label>
             </div>
         </div>
-        <div id="jokerCont" class="brake">
+        <div id="jokerCont">
             <input type="checkbox" id="joker" name="joker">
             <label for="joker"> Kupi Dzokera</label>
             <p style="font-size: 10px;padding: 5px;margin: 4px;"> Dzoker košta 5 puta više nego trenutni ulog.</p>
         </div>
-        <div id="linije" class="brake">
-            <div>
+        <div id="linije">
+            <div id="brake" style="background:lightgreen;">
                 <input type="checkbox" id="linija1" name="0" value="1" checked disabled>
                 <label for="linija1"> Linija 1 </label>
             </div>
@@ -80,6 +83,7 @@
                 <label for="linija7"> Linija 7</label>
             </div>
         </div>
+		</div>
     </nav>
     <main>
         <div id="spinovi">
@@ -409,6 +413,7 @@
         </div>
     </main>
     <aside>
+	<div class="navdiv">
         <button id="game-button">Odaberite Tip Igre</button>
         <div>
             <div class="gozma cz" style="background: lightgreen;">
@@ -443,6 +448,7 @@
                 <label for="nag2">1x5 Srednja linija</label>
             </div>
         </div>
+		</div>
     </aside>
     <footer class="midMid">
         Blazing Sun 2020. Sva prava zadržana.
