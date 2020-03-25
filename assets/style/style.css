@@ -217,6 +217,8 @@ progress {
     box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
 }
 
+nav div, aside div, header div, .insajder, #kiki {background:white; border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;}
+
 progress::-moz-progress-bar {
     border-radius: 12px;
     background: #FFF;
@@ -281,13 +283,16 @@ progress::-webkit-progress-value {
     body {
 
         grid-template-areas: "head head head"
-            "nav  main asi"
-            "foot  foot foot";
-        grid-template-rows: 15vh 100% 80px;
+							"nav  main asi"
+							"foot  foot foot";
+        grid-template-rows: 15vh 4fr 80px;
         grid-template-columns: 18% 64% 18%;
     }
 }
 
+.navdiv{background:whote;
+padding:8px;
+margin:8px;}
 
 #preostalo {
     min-height: 18px;
@@ -335,28 +340,6 @@ body {
     background-attachment: fixed;
 }
 
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    25% {
-        background-position: 25% 75%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    75% {
-        background-position: 25% 75%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
 body>main {
     grid-area: main;
     max-width: 1000px;
@@ -371,17 +354,13 @@ body>footer {
 
 td {
 
-    font-size: 10px;
-    height: 16px;
-    width: 20px;
     background-color: #efefef;
-    text-align: center;
-    vertical-align: middle;
+
 
 }
 
 .doigSpin {
-    border: 2px solid black;
+    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
     margin-right: 8px;
     padding: 4px;
     background: white;
@@ -390,9 +369,6 @@ td {
     right: 16px;
 }
 
-.drugiDeoNaslova {
-    float: right;
-}
 
 .poljaTabKvote {
     background-color: greenyellow;
@@ -406,9 +382,9 @@ td {
 
 #jokerCont {
 
-    border: 2px solid black;
+    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
     padding: 1%;
-    margin: 1%;
+   
     background: white;
     display: initial;
     display: block;
@@ -418,8 +394,8 @@ td {
 .cz {
     width: 100%;
     width: -webkit-fill-available;
-    border: 2px solid black;
-    margin: 1%;
+    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
+
     padding: 1%;
 }
 
@@ -427,7 +403,7 @@ td {
 .insajder {
     width: 100%;
     float: left;
-    border: 2px solid black;
+    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
     display: block;
     overflow: hidden;
     padding: 1em;
@@ -435,32 +411,32 @@ td {
 }
 
 .insajder div {
-    border: 2px solid black;
+    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
     margin-right: 8px;
     padding: 4px;
     background: white;
+	
 }
 
 
 #linije div {
     position: relative;
     display: flex;
-    border: 2px solid black;
+    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
     width: 100%;
     width: -webkit-fill-available;
-    border: 2px solid black;
-    margin: 1%;
+  
     padding: 8px;
     background: white;
 
 }
 
-#linije label {
+#linije label { 
 
 
     width: 100%;
     position: absolute;
-    left: 0;
+    left: 10px;
     height: 100%;
     top: 0;
     display: -webkit-box;
@@ -476,20 +452,11 @@ td {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
+    font-size: 14px;
 
 
 }
 
-.ulog {
-    margin-top: 32px;
-    width: 50%;
-    float: left;
-    border: 2px solid black;
-    display: flex;
-    overflow: hidden;
-    padding: 1em;
-    height: auto;
-}
 
 
 
@@ -516,16 +483,6 @@ td {
     position: relative;
 }
 
-.tipIgre {
-
-    margin-top: 32px;
-    border: 2px solid black;
-    display: flex;
-    overflow: hidden;
-    padding: 1em;
-    height: auto;
-
-}
 
 #buttonContainer {
     display: flex;
@@ -545,7 +502,7 @@ td {
 }
 
 #buttonContainer div,
-header,
+header, footer,
 .carousel__cell p {
 
     display: -webkit-box;
@@ -563,7 +520,6 @@ header,
     flex-direction: column;
 
 }
-
 .midMid {
 
     display: -webkit-box;
