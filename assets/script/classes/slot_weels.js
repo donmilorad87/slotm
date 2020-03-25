@@ -1,59 +1,45 @@
 'use strict';
 
-import FetchResults from '/slotm/assets/script/classes/fetch_results.js';
+import DrawLines from '/slotm/assets/script/classes/draw_lines.js';
 
-export default class SlotWeels extends FetchResults {
+export default class SlotWeels extends DrawLines {
 
-    constructor(instance) {
+    constructor() {
 
         super()
 
         this.slotObject = {
             brojKredita: 1000,
             ulog: 2,
-            joker: 0,
             kvote: [100, 50, 30, 5, 50, 30, 20, 4, 30, 20, 10, 3],
             brojac: 0,
             pomagac: 0,
-            instance: instance
+            stopArray: [],
+            spinovi: document.getElementsByClassName('carousel'),
+            scene: document.getElementsByClassName('scene'),
+            okvir: document.getElementById('myCanvas'),
+            ukupanulog: document.getElementById('ukupanulog'),
+            igradzoker: document.getElementById('igraDzoker'),
+            igrabrojlinija: document.getElementById('igraBrojLinija'),
+            brojkreditadiv: document.getElementById('brojKredita'),
+            igraulog: document.getElementById('igraUlog'),
+            igra: document.getElementById('igra'),
+            nag2: document.getElementById('nag2'),
+            brake: document.getElementsByClassName('brake'),
+            tabele: document.getElementById('kiki').getElementsByTagName('table'),
+            radioEventElements: [document.getElementsByClassName('cosma'), document.getElementsByClassName('gozma'), document.getElementsByClassName('gigozma')],
+            zaustaviRotacijuEvent: this.zaustaviRotaciju.bind(this),
+            pokreniOkretanjeSlotovaEvent: this.pokreniOkretanjeSlotova.bind(this),
+            tipIgreEvent: this.tipIgre.bind(this),
+            promeniBetIgreEvent: this.promeniBetIgre.bind(this),
+            promeniNacinNagradjivanjaEvent: this.promeniNacinNagradjivanja.bind(this),
+            progressInterval: null
+
         }
-
-        this.spinovi = document.getElementsByClassName('carousel')
-        this.x = document.getElementsByClassName('brake')
-        this.scene = document.getElementsByClassName('scene')
-        this.okvir = document.getElementById('myCanvas')
-
-        this.downloadTimer;
-        this.zumbul;
-
-        this.zaustaviIgruDugme = this.zaustaviRotacijuFunckija.bind(this);
-        this.pokreniIgruDugme = this.pokreniOkretanjeSlotova.bind(this);
-        this.pokreniTipIgre = this.tipIgreEvent.bind(this);
-        this.pokreniBet = this.promeniBetIgre.bind(this);
-        this.promeniNacin = this.promeniNacinNagradjivanja.bind(this);
 
         this.aktivirajEventeNaRadioButtons()
         this.dodalListenere()
 
-    }
-
-    getVrednostDzokera(x) {
-
-        let vrednostDzokera = 0
-        if (this.slotObject.instance.jokerAdded) {
-
-            vrednostDzokera = x * 5
-        } else {
-            vrednostDzokera = 0
-        }
-
-        this.slotObject.joker = vrednostDzokera
-
-        if (document.getElementById('nag2').checked) {
-            return 0
-        } else {
-            return this.slotObject.joker
-        }
     }
 
     promeniNacinNagradjivanja() {
@@ -74,7 +60,7 @@ export default class SlotWeels extends FetchResults {
 
     }
 
-    tipIgreEvent() {
+    tipIgre() {
 
         let x = document.querySelector('input[name="tipIgre"]:checked')
 
@@ -89,48 +75,58 @@ export default class SlotWeels extends FetchResults {
     }
 
     izbrisiEventeNaRadiouButtons() {
-        let x = [document.getElementsByClassName('cosma'), document.getElementsByClassName('gozma'), document.getElementsByClassName('gigozma')]
 
-        for (let i = 0; i < x.length; i++) {
-            for (let j = 0; j < x[i].length; j++) {
-                x[i][j].onclick = null
+        for (let i = 0; i < this.slotObject.radioEventElements.length; i++) {
+            for (let j = 0; j < this.slotObject.radioEventElements[i].length; j++) {
+                this.slotObject.radioEventElements[i][j].onclick = null
             }
         }
     }
 
     aktivirajEventeNaRadioButtons() {
 
-        let x = [document.getElementsByClassName('cosma'), document.getElementsByClassName('gozma'), document.getElementsByClassName('gigozma')]
+        for (let i = 0; i < this.slotObject.radioEventElements.length; i++) {
+            for (let j = 0; j < this.slotObject.radioEventElements[i].length; j++) {
+                this.slotObject.radioEventElements[i][j].onclick = () => {
+                    if (this.slotObject.radioEventElements[i][j].getElementsByTagName('input')[0].checked === false) {
 
-        for (let i = 0; i < x.length; i++) {
-            for (let j = 0; j < x[i].length; j++) {
-                x[i][j].onclick = () => {
-                    if (x[i][j].getElementsByTagName('input')[0].checked === false) {
+                        if (this.slotObject.radioEventElements[i][j].querySelector('input[name="tipIgre"]')) {
 
-                        if (x[i][j].querySelector('input[name="tipIgre"]')) {
+                            this.napraviSpinove(this.slotObject.radioEventElements[i][j].getElementsByTagName('input')[0].value - 1)
+                            this.slotObject.igra.textContent = this.slotObject.radioEventElements[i][j].getElementsByTagName('label')[0].textContent;
+                            this.getUkupanUlog()
 
-                            this.napraviSpinove(x[i][j].getElementsByTagName('input')[0].value - 1)
-                            document.getElementById('igra').textContent = x[i][j].getElementsByTagName('label')[0].textContent;
-                            document.getElementById('ukupanulog').textContent = this.slotObject.instance.brojacLinija() * this.slotObject.ulog + this.getVrednostDzokera(this.slotObject.ulog)
+                        } else if (this.slotObject.radioEventElements[i][j].querySelector('input[name="bet"]')) {
 
-                        } else if (x[i][j].querySelector('input[name="bet"]')) {
+                            this.pomocnikZaPromenuUloga(this.slotObject.radioEventElements[i][j].getElementsByTagName('input')[0].value)
 
-                            this.pomocnikZaPromenuUloga(x[i][j].getElementsByTagName('input')[0].value)
-
-                        } else if (x[i][j].querySelector('input[name="nag"]')) {
+                        } else if (this.slotObject.radioEventElements[i][j].querySelector('input[name="nag"]')) {
 
                             this.checkNacin(document.querySelector('input[name="nag"]:checked'))
 
                         }
 
-                        x[i][j].parentElement.querySelector('input:checked').parentElement.style.background = 'white'
-                        x[i][j].getElementsByTagName('input')[0].checked = true;
-                        x[i][j].style.background = 'lightgreen'
+                        this.slotObject.radioEventElements[i][j].parentElement.querySelector('input:checked').parentElement.style.background = 'white'
+                        this.slotObject.radioEventElements[i][j].getElementsByTagName('input')[0].checked = true;
+                        this.slotObject.radioEventElements[i][j].style.background = 'lightgreen'
 
                     }
                 }
             }
 
+        }
+    }
+
+    getUkupanUlog(x = 0) {
+
+        if (x === 0) {
+            if (this.slotObject.nag2.checked) {
+                this.slotObject.ukupanulog.textContent = this.slotObject.ulog
+            } else {
+                this.slotObject.ukupanulog.textContent = this.brojacLinija() * this.slotObject.ulog + this.getVrednostDzokera(this.slotObject.ulog)
+            }
+        } else {
+            return this.brojacLinija() * this.slotObject.ulog + this.getVrednostDzokera(this.slotObject.ulog)
         }
     }
 
@@ -147,15 +143,16 @@ export default class SlotWeels extends FetchResults {
     }
 
     checker(x) {
+        let xx = x.parentElement.nextElementSibling.querySelector('input')
         if (x.name === "tipIgre") {
 
             this.napraviSpinove(x.value)
-            document.getElementById('igra').textContent = x.parentElement.nextElementSibling.querySelector('label').textContent;
-            document.getElementById('ukupanulog').textContent = this.slotObject.instance.brojacLinija() * this.slotObject.ulog + this.getVrednostDzokera(this.slotObject.ulog)
+            this.slotObject.igra.textContent = x.parentElement.nextElementSibling.querySelector('label').textContent;
+            this.getUkupanUlog()
 
         } else if (x.name === "bet") {
 
-            this.pomocnikZaPromenuUloga(x.parentElement.nextElementSibling.querySelector('input').value)
+            this.pomocnikZaPromenuUloga(xx.value)
 
         } else if (x.name === "nag") {
 
@@ -163,65 +160,86 @@ export default class SlotWeels extends FetchResults {
 
         }
 
-        x.checked = false
-        x.parentElement.style.background = 'white'
-        x.parentElement.nextElementSibling.querySelector('input').checked = true
+        this.radoiHelper(x)
+        xx.checked = true
         x.parentElement.nextElementSibling.style.background = 'lightgreen'
     }
 
     checkerLast(x) {
+
+        let xx = x.parentElement.parentElement.firstChild.nextElementSibling.querySelector('input')
+
         if (x.name === "tipIgre") {
 
             this.napraviSpinove(0)
-            document.getElementById('igra').textContent = x.parentElement.parentElement.firstChild.nextElementSibling.querySelector('label').textContent;
-            document.getElementById('ukupanulog').textContent = this.slotObject.instance.brojacLinija() * this.slotObject.ulog + this.getVrednostDzokera(this.slotObject.ulog)
+            this.slotObject.igra.textContent = x.parentElement.parentElement.firstChild.nextElementSibling.querySelector('label').textContent;
+            this.getUkupanUlog()
 
         } else if (x.name === "bet") {
 
-            this.pomocnikZaPromenuUloga(x.parentElement.parentElement.firstChild.nextElementSibling.querySelector('input').value)
+            this.pomocnikZaPromenuUloga(xx.value)
 
         } else if (x.name === "nag") {
 
             this.perspectiveNo();
 
-            this.slotObject.instance.ocistiCanvas()
-            this.slotObject.instance.lineCheck()
+            this.ocistiCanvas()
+            this.lineCheck()
 
-            if (this.slotObject.instance.jokerAdded) {
+            if (this.jokerAdded) {
 
-                this.slotObject.instance.dodajDzokera(this.slotObject.instance.kkk1, this.slotObject.instance.kkk2)
+                this.dodajDzokera(this.kkk1, this.kkk2)
 
-                document.getElementById('ukupanulog').textContent = document.getElementById('igraBrojLinija').textContent * document.getElementById('igraUlog').textContent + document.querySelector('input[name="bet"]:checked').value * 5
-                document.getElementById('igraDzoker').textContent = 'DA (' + document.querySelector('input[name="bet"]:checked').value * 5 + ' $)'
-
+                this.slotObject.igradzoker.textContent = 'DA (' + this.getVrednostDzokera(this.slotObject.ulog) + ' $)'
+                document.getElementById('joker').checked;
+                document.getElementById('joker').disabled;
             }
 
         }
 
-        x.checked = false
-        x.parentElement.style.background = 'white'
-        x.parentElement.parentElement.firstChild.nextElementSibling.querySelector('input').checked = true
+        this.radoiHelper(x)
+		
+        xx.checked = true
         x.parentElement.parentElement.firstChild.nextElementSibling.style.background = 'lightgreen'
     }
+	
+	radoiHelper(x){
+		x.checked = false
+        x.parentElement.style.background = 'white'
+	}
+	
+    getVrednostDzokera(x) {
 
-    getUkupanUlog(x, y, z) {
-        if (document.getElementById('nag2').checked) {
-            return x
+        if (this.jokerAdded) {
+
+            this.vrednostDzokera = x * 5
         } else {
-            return x * y + z
+            this.vrednostDzokera = 0
         }
+
+        return this.vrednostDzokera
+
+        // if (this.slotObject.nag2.checked) {
+        //     return 0
+        // } else {
+        //     return this.vrednostDzokera
+        // }
     }
 
     pomocnikZaPromenuUloga(x) {
-        document.getElementById('igraUlog').textContent = x
-        document.getElementById('ukupanulog').textContent = this.slotObject.instance.brojacLinija() * x + this.getVrednostDzokera(x)
+        this.slotObject.igraulog.textContent = x
+        if (this.slotObject.nag2.checked) {
+            this.slotObject.ukupanulog.textContent = x
+        } else {
+            this.slotObject.ukupanulog.textContent = this.brojacLinija() * x + this.getVrednostDzokera(x)
+        }
 
-        if (this.slotObject.instance.jokerAdded) {
+        if (this.jokerAdded) {
 
-            if (document.getElementById('nag2').checked) {
-                document.getElementById('igraDzoker').textContent = ' NE (0 $)';
+            if (this.slotObject.nag2.checked) {
+                this.slotObject.igradzoker.textContent = ' NE (0 $)';
             } else {
-                document.getElementById('igraDzoker').textContent = 'DA (' + x * 5 + ' $)'
+                this.slotObject.igradzoker.textContent = 'DA (' + x * 5 + ' $)'
             }
 
         }
@@ -246,7 +264,7 @@ export default class SlotWeels extends FetchResults {
             for (let j = 0; j < 12; j++) {
                 if (tipIgre == 0) {
 
-                    this.spinovi[i].getElementsByTagName("p")[j].textContent = brojevi[j]
+                    this.slotObject.spinovi[i].getElementsByTagName("p")[j].textContent = brojevi[j]
 
                     if (i < 1) {
                         this.pomocnaFunct(brojevi, brojeviKvote)
@@ -255,43 +273,42 @@ export default class SlotWeels extends FetchResults {
                     }
 
                 } else if (tipIgre == 1) {
-                    this.spinovi[i].getElementsByTagName("p")[j].textContent = rBrojevi[j]
+                    this.slotObject.spinovi[i].getElementsByTagName("p")[j].textContent = rBrojevi[j]
                     if (i < 1) {
                         this.pomocnaFunct(rBrojevi, rBrojeviKvote)
                         this.pomocnikZaZetone([1, 2, 3, 4, 5])
                     }
                 } else if (tipIgre == 2) {
-                    this.spinovi[i].getElementsByTagName("p")[j].textContent = vockice[j]
+                    this.slotObject.spinovi[i].getElementsByTagName("p")[j].textContent = vockice[j]
                     if (i < 1) {
                         this.pomocnaFunct(vockice, vockiceKvote)
                         this.pomocnikZaZetone([5, 6, 7, 8, 9])
                     }
                 } else if (tipIgre == 3) {
 
-                    this.spinovi[i].getElementsByTagName("p")[j].textContent = zivotinje[j]
+                    this.slotObject.spinovi[i].getElementsByTagName("p")[j].textContent = zivotinje[j]
                     if (i < 1) {
                         this.pomocnaFunct(zivotinje, zivotinjeKvote)
                         this.pomocnikZaZetone([4, 5, 6, 7, 8])
                     }
                 } else if (tipIgre == 4) {
 
-                    this.spinovi[i].getElementsByTagName("p")[j].textContent = emoji[j]
+                    this.slotObject.spinovi[i].getElementsByTagName("p")[j].textContent = emoji[j]
                     if (i < 1) {
                         this.pomocnaFunct(emoji, emojiKvote)
                         this.pomocnikZaZetone([3, 4, 5, 6, 7])
                     }
                 }
             }
-            this.scene[i].setAttribute('style', 'perspective: 0px;transition: 0.3s;');
-            this.spinovi[i].style.cssText = 'translateZ(-336px) rotateX(0deg);transition:0.1s;';
+            this.slotObject.scene[i].setAttribute('style', 'perspective: 0px;transition: 0.3s;');
+            this.slotObject.spinovi[i].style.cssText = 'translateZ(-336px) rotateX(0deg);transition:0.1s;';
         }
 
-        if (document.getElementById('nag1').checked) {
-            this.perspectiveNo();
-
-        } else {
+        if (this.slotObject.nag2.checked) {
             this.perspectiveYes();
 
+        } else {
+            this.perspectiveNo();
         }
 
     }
@@ -299,32 +316,36 @@ export default class SlotWeels extends FetchResults {
     perspectiveNo() {
 
         for (let i = 0; i < 5; i++) {
-            this.scene[i].setAttribute('style', 'perspective: 0px;transition: 0.3s;');
+            this.slotObject.scene[i].setAttribute('style', 'perspective: 0px;transition: 0.3s;');
 
         }
 
-        this.okvir.style.height = '100%';
-        this.okvir.style.top = '0';
-        document.getElementById('linije').style.display = 'block'
-        document.getElementById('jokerCont').style.display = 'block'
-        document.getElementById('igraBrojLinija').textContent = this.slotObject.instance.brojacLinija()
+        this.perspectiveHelper('100%', '0', 'block', 'block', this.brojacLinija())
+        this.slotObject.ukupanulog.textContent = this.slotObject.ulog * this.brojacLinija() + this.getVrednostDzokera(this.slotObject.ulog)
 
     }
+
     perspectiveYes() {
 
-        this.slotObject.instance.ocistiCanvas()
+        this.ocistiCanvas()
 
         for (let i = 0; i < 5; i++) {
-            this.scene[i].setAttribute('style', 'perspective: 1000px;transition: 0.3s;');
+            this.slotObject.scene[i].setAttribute('style', 'perspective: 1000px;transition: 0.3s;');
         }
 
-        this.okvir.style.height = '180px';
-        this.okvir.style.top = 'calc(50% - 90px)';
-        document.getElementById('linije').style.display = 'none'
-        document.getElementById('jokerCont').style.display = 'none'
-        document.getElementById('igraBrojLinija').textContent = 1
-        document.getElementById('ukupanulog').textContent = this.slotObject.ulog
-        document.getElementById('igraDzoker').textContent = " NE (0 $)"
+        this.perspectiveHelper('180px', 'calc(50% - 90px)', 'none', 'none', 1)
+
+        this.slotObject.ukupanulog.textContent = this.slotObject.ulog
+        this.slotObject.igradzoker.textContent = " NE (0 $)"
+
+    }
+
+    perspectiveHelper(x, y, z, k, j) {
+        this.slotObject.okvir.style.height = x
+        this.slotObject.okvir.style.top = y
+        document.getElementById('linije').style.display = z
+        document.getElementById('jokerCont').style.display = k
+        this.slotObject.igrabrojlinija.textContent = j
 
     }
 
@@ -332,15 +353,15 @@ export default class SlotWeels extends FetchResults {
         this.slotObject.kvote = array2
         for (let i = 0; i < 3; i++) {
             if (i === 0) {
-                this.pomocnikPonocneFunkcije(array, i, 4, 5)
+                this.pomocnikPonocneFunkcije([array[4], array[5]], i)
                 this.pomocnikZaKvote([array2[0], array2[1], array2[2], array2[3]], i)
             } else if (i === 1) {
 
-                this.pomocnikPonocneFunkcije(array, i, 2, 3)
+                this.pomocnikPonocneFunkcije([array[2], array[3]], i)
                 this.pomocnikZaKvote([array2[4], array2[5], array2[6], array2[7]], i)
             } else if (i === 2) {
 
-                this.pomocnikPonocneFunkcije(array, i, 0, 1)
+                this.pomocnikPonocneFunkcije([array[0], array[1]], i)
                 this.pomocnikZaKvote([array2[8], array2[9], array2[10], array2[11]], i)
             }
         }
@@ -354,14 +375,14 @@ export default class SlotWeels extends FetchResults {
             cosma[i].querySelector('label').textContent = array[i] + '$'
         }
 
-        document.getElementById('igraUlog').textContent = document.querySelector('input[name="bet"]:checked').value
+        this.slotObject.igraulog.textContent = document.querySelector('input[name="bet"]:checked').value
         this.slotObject.ulog = document.querySelector('input[name="bet"]:checked').value
         if (document.getElementById('izbrisiDzokera')) {
-            if (document.getElementById('nag2').checked) {
-                document.getElementById('igraDzoker').textContent = ' NE (0 $)'
+            if (this.slotObject.nag2.checked) {
+                this.slotObject.igradzoker.textContent = ' NE (0 $)'
             } else {
 
-                document.getElementById('igraDzoker').textContent = 'DA (' + (document.querySelector('input[name="bet"]:checked').value * 5) + ' $)'
+                this.slotObject.igradzoker.textContent = 'DA (' + (document.querySelector('input[name="bet"]:checked').value * 5) + ' $)'
 
             }
 
@@ -371,47 +392,43 @@ export default class SlotWeels extends FetchResults {
 
     pomocnikZaKvote(array, i) {
         for (let j = 0; j < 4; j++) {
-            kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[j].getElementsByTagName('td')[5].textContent = array[j]
+            this.slotObject.tabele[i].getElementsByTagName('tr')[j].getElementsByTagName('td')[5].textContent = array[j]
         }
     }
 
-    pomocnikPonocneFunkcije(array, i, x, y) {
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('caption')[0].textContent = 'Kvota za ' + array[x] + ' i ' + array[y]
+    pomocnikPonocneFunkcije(array, i) {
+        this.slotObject.tabele[i].getElementsByTagName('caption')[0].textContent = 'Kvota za ' + array[0] + ' || ' + array[1]
 
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[0].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[1].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[2].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[3].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[4].textContent = array[x] + ' || ' + array[y]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[0].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[1].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[2].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[3].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[0].getElementsByTagName('td')[4].textContent = array[0] + ' || ' + array[1]
 
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[1].getElementsByTagName('td')[1].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[1].getElementsByTagName('td')[2].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[1].getElementsByTagName('td')[3].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[1].getElementsByTagName('td')[4].textContent = array[x] + ' || ' + array[y]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[1].getElementsByTagName('td')[1].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[1].getElementsByTagName('td')[2].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[1].getElementsByTagName('td')[3].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[1].getElementsByTagName('td')[4].textContent = array[0] + ' || ' + array[1]
 
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[2].getElementsByTagName('td')[2].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[2].getElementsByTagName('td')[3].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[2].getElementsByTagName('td')[4].textContent = array[x] + ' || ' + array[y]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[2].getElementsByTagName('td')[2].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[2].getElementsByTagName('td')[3].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[2].getElementsByTagName('td')[4].textContent = array[0] + ' || ' + array[1]
 
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[3].getElementsByTagName('td')[3].textContent = array[x] + ' || ' + array[y]
-        kiki.getElementsByTagName('table')[i].getElementsByTagName('tr')[3].getElementsByTagName('td')[4].textContent = array[x] + ' || ' + array[y]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[3].getElementsByTagName('td')[3].textContent = array[0] + ' || ' + array[1]
+        this.slotObject.tabele[i].getElementsByTagName('tr')[3].getElementsByTagName('td')[4].textContent = array[0] + ' || ' + array[1]
     }
 
-    rotateCarousel(array) {
+    rotateSlots(array) {
 
-        let x = document.getElementsByClassName('brake');
-
-        for (let i = 0; i < 2; i++) {
-            this.x[i].style.pointerEvents = "none";
-        }
+        document.getElementById('linije').style.pointerEvents = 'none'
 
         for (let i = 0; i < 5; i++) {
 
             if (this.slotObject.pomagac === 0) {
-                this.spinovi[i].style.cssText = "transform: translateZ(-336px) rotateX(" + (360 * (Math.floor(Math.random() * (15 - 10 + 1)) + 10) + (-30) * (array[i] - 1)) + "deg); transition-delay:" + 0.2 * i + "s; transition-duration: 5s;";
+                this.slotObject.spinovi[i].style.cssText = "transform: translateZ(-336px) rotateX(" + (360 * (Math.floor(Math.random() * (15 - 10 + 1)) + 10) + (-30) * (array[i] - 1)) + "deg); transition-delay:" + 0.2 * i + "s; transition-duration: 5s;";
                 this.slotObject.pomagac++
             } else {
-                this.spinovi[i].style.cssText = "transform: translateZ(-336px) rotateX(" + (-360 * (Math.floor(Math.random() * (10 - 5 + 1)) + 5) + (-30) * (array[i] - 1)) + "deg); transition-delay:" + 0.2 * i + "s; transition-duration: 5s;";
+                this.slotObject.spinovi[i].style.cssText = "transform: translateZ(-336px) rotateX(" + (-360 * (Math.floor(Math.random() * (10 - 5 + 1)) + 5) + (-30) * (array[i] - 1)) + "deg); transition-delay:" + 0.2 * i + "s; transition-duration: 5s;";
                 this.slotObject.pomagac = 0
             }
 
@@ -419,104 +436,145 @@ export default class SlotWeels extends FetchResults {
 
     }
 
-    stopAnimation(array) {
+    stopSlots() {
 
         for (let i = 0; i < 5; i++) {
 
-            this.spinovi[i].style.cssText = 'transform: translateZ(-336px) rotateX(' + (-30) * ((array[i] - 1)) + 'deg); transition-duration: 0s;';
+            this.slotObject.spinovi[i].style.cssText = 'transform: translateZ(-336px) rotateX(' + (-30) * ((this.slotObject.stopArray[i] - 1)) + 'deg); transition-duration: 0s;';
         }
 
         this.pointerAll()
 
-        this.upisivacKredita(array)
+        this.upisivacKredita(this.slotObject.stopArray)
 
     }
 
     pointerAll() {
 
-        let x = document.getElementsByClassName('brake');
-
-        for (let i = 0; i < 2; i++) {
-            this.x[i].style.pointerEvents = "auto";
-        }
-
-        document.getElementById('stoper').removeEventListener('click', this.zaustaviIgruDugme)
+        // for (let i = 0; i < 2; i++) {
+        //     this.slotObject.brake[i].style.pointerEvents = "auto";
+        // }
+        document.getElementById('linije').style.pointerEvents = 'auto'
+        document.getElementById('stoper').removeEventListener('click', this.slotObject.zaustaviRotacijuEvent)
 
         this.dodalListenere()
 
+        //document.getElementById('brake').style.pointerEvents = "auto";
+        //document.getElementById('linija1').style.opacity = "1";
     }
 
     dodalListenere() {
+        //this.lining(document.getElementById('linije').getElementsByTagName('input'))
+
+        document.getElementById('joker').addEventListener('click', this.jokerCheckboxEvent)
+
+        if (!this.jokerAdded) {
+            document.getElementById('joker').disabled = false
+        }
+
+        if (document.getElementById('snimiDzokera')) {
+            document.getElementById('snimiDzokera').addEventListener('click', this.myloader3);
+        }
+
+        if (document.getElementById('izbrisiDzokera')) {
+            document.getElementById('izbrisiDzokera').addEventListener('click', this.myloader4);
+        }
+
         this.aktivirajEventeNaRadioButtons();
-        document.getElementById('pokreniIgru').addEventListener('click', this.pokreniIgruDugme);
-        document.getElementById('game-button').addEventListener('click', this.pokreniTipIgre);
-        document.getElementById('bet-button').addEventListener('click', this.pokreniBet);
-        document.getElementById('game-button-nacin').addEventListener('click', this.promeniNacin);
+        document.getElementById('pokreniIgru').addEventListener('click', this.slotObject.pokreniOkretanjeSlotovaEvent);
+        document.getElementById('game-button').addEventListener('click', this.slotObject.tipIgreEvent);
+        document.getElementById('bet-button').addEventListener('click', this.slotObject.promeniBetIgreEvent);
+        document.getElementById('game-button-nacin').addEventListener('click', this.slotObject.promeniNacinNagradjivanjaEvent);
 
     }
 
-    zaustaviRotacijuFunckija() {
+    zaustaviRotaciju() {
 
-        clearInterval(this.downloadTimer);
+        clearInterval(this.slotObject.progressInterval);
 
+        this.progresPomocnik()
+
+        this.stopSlots();
+
+    }
+
+    progresPomocnik() {
         document.getElementById('preostalo').textContent = '5 sec';
         document.getElementById('progressBar').value = 0;
         document.getElementById('preostalo').style.visibility = 'hidden';
+    }
 
-        this.stopAnimation(this.zumbul);
+    skiniListenere() {
+        //this.obrisiLiningEvents(document.getElementById('linije').getElementsByTagName('input'))
+        //document.getElementById('brake').style.pointerEvents = "none";
+        //document.getElementById('linija1').style.opacity = "0.6";
 
+        document.getElementById('joker').removeEventListener('click', this.jokerCheckboxEvent)
+        document.getElementById('joker').disabled = true
+
+        if (document.getElementById('snimiDzokera')) {
+            document.getElementById('snimiDzokera').removeEventListener('click', this.myloader3);
+        }
+        if (document.getElementById('izbrisiDzokera')) {
+            document.getElementById('izbrisiDzokera').removeEventListener('click', this.myloader4);
+        }
+
+        this.izbrisiEventeNaRadiouButtons()
+
+        document.getElementById('pokreniIgru').removeEventListener('click', this.slotObject.pokreniOkretanjeSlotovaEvent);
+        document.getElementById('game-button').removeEventListener('click', this.slotObject.tipIgreEvent);
+        document.getElementById('bet-button').removeEventListener('click', this.slotObject.promeniBetIgreEvent);
+        document.getElementById('game-button-nacin').removeEventListener('click', this.slotObject.promeniNacinNagradjivanjaEvent);
     }
 
     pokreniOkretanjeSlotova() {
 
-        this.izbrisiEventeNaRadiouButtons()
-
-        document.getElementById('pokreniIgru').removeEventListener('click', this.pokreniIgruDugme);
-        document.getElementById('game-button').removeEventListener('click', this.pokreniTipIgre);
-        document.getElementById('bet-button').removeEventListener('click', this.pokreniBet);
-        document.getElementById('game-button-nacin').removeEventListener('click', this.promeniNacin);
-
-        this.rotateCarousel([360, 360, 360, 360, 360])
-
-        if (this.slotObject.instance.jokerAdded) {
-            this.slotObject.joker = this.slotObject.ulog * 5
+        if (this.slotObject.brojKredita < this.getUkupanUlog(1)) {
+            alert("nemate vise kredita, reloadujte stranicu")
         } else {
-            this.slotObject.joker = 0
+            this.pomocnikRotacije()
         }
+
+    }
+
+    pomocnikRotacije() {
+        this.skiniListenere();
+        this.rotateSlots([360, 360, 360, 360, 360])
+
+        console.log('jjj', this.jokerAdded)
 
         let sendObj = {
 
             "ulog": this.slotObject.ulog,
             "igra": document.querySelector('input[name="tipIgre"]:checked').value,
             "kvote": this.slotObject.kvote,
-            "brojLinija": this.slotObject.instance.brojacLinija(1),
-            "dzoker": this.slotObject.instance.dzokerList(),
-            "vrednostDzokera": this.slotObject.joker,
+            "brojLinija": this.brojacLinija(1),
+            "dzoker": (this.slotObject.nag2.checked) ? 0 : this.dzoker,
+            "vrednostDzokera": (this.slotObject.nag2.checked) ? 0 : this.vrednostDzokera,
             "nacin": document.querySelector('input[name="nag"]:checked').value,
             "brojKredita": this.slotObject.brojKredita
 
         }
 
+        console.log(sendObj)
         this.postData('controller.php', sendObj)
             .then((data) => {
                 this.slotObject.pomagac--
                 this.slotObject.brojac++
-                this.zumbul = data;
+                this.slotObject.stopArray = data;
                 console.log('data', data)
                 console.log(data[5])
-                this.rotateCarousel(data)
+                this.rotateSlots(data)
 
-                document.getElementById('stoper').addEventListener('click', this.zaustaviIgruDugme)
+                document.getElementById('stoper').addEventListener('click', this.slotObject.zaustaviRotacijuEvent)
 
                 let timeleft = 5;
-                this.downloadTimer = setInterval(() => {
+                this.slotObject.progressInterval = setInterval(() => {
                     if (timeleft <= 0) {
 
-                        clearInterval(this.downloadTimer)
+                        clearInterval(this.slotObject.progressInterval)
 
-                        document.getElementById('preostalo').textContent = '5 sec';
-                        document.getElementById('progressBar').value = 0;
-                        document.getElementById('preostalo').style.visibility = 'hidden';
+                        this.progresPomocnik()
 
                         this.pointerAll()
                         this.upisivacKredita(data)
@@ -532,22 +590,38 @@ export default class SlotWeels extends FetchResults {
                 }, 1000);
             })
 
-        if (document.getElementById('nag2').checked) {
+        if (this.slotObject.nag2.checked) {
 
-            document.getElementById('brojKredita').textContent = this.slotObject.brojKredita - this.slotObject.ulog
+            this.slotObject.brojkreditadiv.textContent = this.slotObject.brojKredita - this.slotObject.ulog
 
-        } else if (document.getElementById('nag1').checked) {
-            document.getElementById('brojKredita').textContent = this.slotObject.brojKredita - (this.slotObject.ulog * this.slotObject.instance.brojacLinija() + this.slotObject.joker)
+        } else {
+            this.slotObject.brojkreditadiv.textContent = this.slotObject.brojKredita - (this.slotObject.ulog * this.brojacLinija() + this.vrednostDzokera)
 
         }
+    }
 
+    async postData(url = '', data = {}) {
+
+        const response = await fetch(url, {
+            method: 'POST',
+            mode: 'same-origin',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data)
+        });
+        return await response.json();
     }
 
     upisivacKredita(array) {
 
-        if ((array[8] - array[7]) == document.getElementById('brojKredita').textContent) {
+        if ((array[8] - array[7]) == this.slotObject.brojkreditadiv.textContent) {
             this.slotObject.brojKredita = array[8]
-            document.getElementById('brojKredita').textContent = array[8]
+            this.slotObject.brojkreditadiv.textContent = array[8]
             document.getElementById('odSpin').textContent = this.slotObject.brojac
             if (array[7] > 0) {
 
@@ -563,13 +637,13 @@ export default class SlotWeels extends FetchResults {
                 izvBrojev.innerHTML = 'Izvučeni brojevi:<span>' + array[0] + ',' + array[1] + ',' + array[2] + ',' + array[3] + ',' + array[4] + '</span>';
 
                 let ukUl = document.createElement('div');
-                ukUl.innerHTML = 'Ukupan ulog: <span>' + document.getElementById('ukupanulog').textContent + ' $</span>';
+                ukUl.innerHTML = 'Ukupan ulog: <span>' + this.slotObject.ukupanulog.textContent + ' $</span>';
 
                 let tipNag = document.createElement('div');
                 tipNag.innerHTML = 'Tip nagradjivanja:<span>' + document.querySelector('input[name="nag"]:checked').value + '</span>';
 
                 let upOd = document.createElement('div');
-                upOd.innerHTML = 'Odigrano Linija: <span>' + document.getElementById('igraBrojLinija').textContent + '</span>';
+                upOd.innerHTML = 'Odigrano Linija: <span>' + this.slotObject.igrabrojlinija.textContent + '</span>';
 
                 let ukDob = document.createElement('div');
                 ukDob.innerHTML = 'Ukupan dobitak: <span >' + array[7] + '</span> $';
@@ -658,7 +732,7 @@ export default class SlotWeels extends FetchResults {
         } else {
 
             this.slotObject.brojKredita = 0
-            document.getElementById('brojKredita').textContent = 0
+            this.slotObject.brojkreditadiv.textContent = 0
             console.log('varate, zbog toga su vam oduzeti svi krediti')
         }
 
