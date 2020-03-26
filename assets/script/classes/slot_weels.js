@@ -40,6 +40,8 @@ export default class SlotWeels extends DrawLines {
         this.aktivirajEventeNaRadioButtons()
         this.dodalListenere()
 
+
+
     }
 
     promeniNacinNagradjivanja() {
@@ -116,7 +118,12 @@ export default class SlotWeels extends DrawLines {
 
         }
     }
-
+	
+	radoiHelper(x){
+		x.checked = false
+        x.parentElement.style.background = 'white'
+	}
+	
     getUkupanUlog(x = 0) {
 
         if (x === 0) {
@@ -203,10 +210,7 @@ export default class SlotWeels extends DrawLines {
         x.parentElement.parentElement.firstChild.nextElementSibling.style.background = 'lightgreen'
     }
 	
-	radoiHelper(x){
-		x.checked = false
-        x.parentElement.style.background = 'white'
-	}
+
 	
     getVrednostDzokera(x) {
 
@@ -459,12 +463,12 @@ export default class SlotWeels extends DrawLines {
 
         this.dodalListenere()
 
-        //document.getElementById('brake').style.pointerEvents = "auto";
-        //document.getElementById('linija1').style.opacity = "1";
+        document.getElementById('brake').style.pointerEvents = "auto";
+        document.getElementById('linija1').style.opacity = "1";
     }
 
     dodalListenere() {
-        //this.lining(document.getElementById('linije').getElementsByTagName('input'))
+        this.lining(document.getElementById('linije').getElementsByTagName('input'))
 
         document.getElementById('joker').addEventListener('click', this.jokerCheckboxEvent)
 
@@ -505,9 +509,9 @@ export default class SlotWeels extends DrawLines {
     }
 
     skiniListenere() {
-        //this.obrisiLiningEvents(document.getElementById('linije').getElementsByTagName('input'))
-        //document.getElementById('brake').style.pointerEvents = "none";
-        //document.getElementById('linija1').style.opacity = "0.6";
+        this.obrisiLiningEvents(document.getElementById('linije').getElementsByTagName('input'))
+        document.getElementById('brake').style.pointerEvents = "none";
+        document.getElementById('linija1').style.opacity = "0.5";
 
         document.getElementById('joker').removeEventListener('click', this.jokerCheckboxEvent)
         document.getElementById('joker').disabled = true
