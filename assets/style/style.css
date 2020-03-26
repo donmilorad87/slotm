@@ -8,17 +8,11 @@ body {
     margin: 0;
 
     -webkit-touch-callout: none;
-    /* iOS Safari */
     -webkit-user-select: none;
-    /* Safari */
     -khtml-user-select: none;
-    /* Konqueror HTML */
     -moz-user-select: none;
-    /* Old versions of Firefox */
     -ms-user-select: none;
-    /* Internet Explorer/Edge */
     user-select: none;
-
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 
 }
@@ -68,6 +62,7 @@ transition: 0.3s;
     width: -webkit-fill-available;
     margin: 0;
     box-shadow: 0px -1px 2px gray inset, 0px 0px 0px 3px white inset, 0px 1px 5px 2px black inset, 0px 15px 0px 3px rgba(255, 255, 255, 0.5) inset, 0px -8px 15px 0px black inset;
+	border:10px solid white;
 }
 
 .carousel__cell:nth-child(1) p {
@@ -149,7 +144,7 @@ button {
     -o-transition: background-color .2s ease-out;
     transition: background-color .2s ease-out;
     background-clip: padding-box;
-    /* Fix bleeding */
+
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -197,17 +192,15 @@ button[disabled]:active {
     cursor: default;
     position: static;
     color: #999;
-    /* Usually, !important should be avoided but here it's really needed :) */
     -moz-box-shadow: none !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
 }
 
-/* setting the dimensions */
 progress {
     display: block;
-    /* default: inline-block */
+
 
     width: 160px;
     padding: 4px;
@@ -226,7 +219,6 @@ progress::-moz-progress-bar {
 
 }
 
-/* webkit */
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     progress {
         height: 25px;
@@ -283,10 +275,10 @@ progress::-webkit-progress-value {
     body {
 
         grid-template-areas: "head head head"
-							"nav  main asi"
-							"foot  foot foot";
+			     "nav  main asi"
+			     "foot  foot foot";
         grid-template-rows: 15vh 4fr 80px;
-        grid-template-columns: 18% 64% 18%;
+        grid-template-columns: 18% 64%  18%;
     }
 }
 
