@@ -659,18 +659,18 @@ export default class SlotWeels extends DrawLines {
 
                 let division = document.createElement('div');
                 if (JSON.parse(array[5]).nacin == 1) {
-                    if (array[10].length > 1) {
+                   
                         for (let i = 0; i < array[10].length; i++) {
                             if (array[10][i] !== "nema dobitka") {
                                 division.innerHTML += '<h1>Svaka čast imate pogodak na liniji ' + (array[10][i][5] + 1) + ' </h1>'
                             }
 
                         }
-                    } else {
+                  
 
-                        division.innerHTML += '<h1>Svaka čast imate pogodak na liniji 1! </h1>'
+                    
 
-                    }
+                    
                 } else {
                     division.innerHTML += '<h1>Svaka čast imate pogodak! </h1>'
                 }
