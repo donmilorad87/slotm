@@ -321,7 +321,7 @@ export default class SlotWeels extends DrawLines {
         }
 
         this.perspectiveHelper('100%', '0', 'block', 'block', this.brojacLinija())
-		spinovi.style.overflow = 'hidden'
+		spinovi.style.cssText = 'overflow:hidden; margin-bottom: 18px;'
         this.slotObject.ukupanulog.textContent = this.slotObject.ulog * this.brojacLinija() + this.getVrednostDzokera(this.slotObject.ulog)
 
     }
@@ -335,7 +335,7 @@ export default class SlotWeels extends DrawLines {
         }
 
         this.perspectiveHelper('180px', 'calc(50% - 90px)', 'none', 'none', 1)
-		spinovi.style.overflow = 'initial'
+		spinovi.style.cssText = 'overflow:initial; margin-bottom: 22px;'
         this.slotObject.ukupanulog.textContent = this.slotObject.ulog
         this.slotObject.igradzoker.textContent = " NE (0 $)"
 
