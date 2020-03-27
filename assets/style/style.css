@@ -387,8 +387,8 @@ td {
     padding: 1%;
    
     background: white;
-    display: initial;
-    display: block;
+
+
 
 }
 
@@ -403,6 +403,7 @@ td {
 #kiki,
 .insajder {
     width: 100%;
+	width: -webkit-fill-available;
     float: left;
     border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
     display: block;
@@ -486,7 +487,7 @@ td {
     padding: 10px;
     height: auto;
     position: relative;
-	    margin: 32px 0;
+	margin-bottom: 22px;
 }
 
 
