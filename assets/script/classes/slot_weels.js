@@ -139,7 +139,7 @@ export default class SlotWeels extends DrawLines {
 
     checkNacin(x) {
 
-        if (x.id === 'nag1') {
+        if (x.id === 'nag2') {
             this.checker(x)
 
         } else {
@@ -155,31 +155,6 @@ export default class SlotWeels extends DrawLines {
 
             this.napraviSpinove(x.value)
             this.slotObject.igra.textContent = x.parentElement.nextElementSibling.querySelector('label').textContent;
-            this.getUkupanUlog()
-
-        } else if (x.name === "bet") {
-
-            this.pomocnikZaPromenuUloga(xx.value)
-
-        } else if (x.name === "nag") {
-
-            this.perspectiveYes();
-
-        }
-
-        this.radoiHelper(x)
-        xx.checked = true
-        x.parentElement.nextElementSibling.style.background = 'lightgreen'
-    }
-
-    checkerLast(x) {
-
-        let xx = x.parentElement.parentElement.firstChild.nextElementSibling.querySelector('input')
-
-        if (x.name === "tipIgre") {
-
-            this.napraviSpinove(0)
-            this.slotObject.igra.textContent = x.parentElement.parentElement.firstChild.nextElementSibling.querySelector('label').textContent;
             this.getUkupanUlog()
 
         } else if (x.name === "bet") {
@@ -205,6 +180,31 @@ export default class SlotWeels extends DrawLines {
         }
 
         this.radoiHelper(x)
+        xx.checked = true
+        x.parentElement.nextElementSibling.style.background = 'lightgreen'
+    }
+
+    checkerLast(x) {
+
+        let xx = x.parentElement.parentElement.firstChild.nextElementSibling.querySelector('input')
+
+        if (x.name === "tipIgre") {
+
+            this.napraviSpinove(0)
+            this.slotObject.igra.textContent = x.parentElement.parentElement.firstChild.nextElementSibling.querySelector('label').textContent;
+            this.getUkupanUlog()
+
+        } else if (x.name === "bet") {
+
+            this.pomocnikZaPromenuUloga(xx.value)
+
+        } else if (x.name === "nag") {
+			this.perspectiveYes();
+            
+
+        }
+
+        this.radoiHelper(x)
 		
         xx.checked = true
         x.parentElement.parentElement.firstChild.nextElementSibling.style.background = 'lightgreen'
@@ -223,11 +223,7 @@ export default class SlotWeels extends DrawLines {
 
         return this.vrednostDzokera
 
-        // if (this.slotObject.nag2.checked) {
-        //     return 0
-        // } else {
-        //     return this.vrednostDzokera
-        // }
+
     }
 
     pomocnikZaPromenuUloga(x) {
@@ -325,6 +321,7 @@ export default class SlotWeels extends DrawLines {
         }
 
         this.perspectiveHelper('100%', '0', 'block', 'block', this.brojacLinija())
+		spinovi.style.overflow = 'hidden'
         this.slotObject.ukupanulog.textContent = this.slotObject.ulog * this.brojacLinija() + this.getVrednostDzokera(this.slotObject.ulog)
 
     }
@@ -338,7 +335,7 @@ export default class SlotWeels extends DrawLines {
         }
 
         this.perspectiveHelper('180px', 'calc(50% - 90px)', 'none', 'none', 1)
-
+		spinovi.style.overflow = 'initial'
         this.slotObject.ukupanulog.textContent = this.slotObject.ulog
         this.slotObject.igradzoker.textContent = " NE (0 $)"
 
@@ -455,9 +452,7 @@ export default class SlotWeels extends DrawLines {
 
     pointerAll() {
 
-        // for (let i = 0; i < 2; i++) {
-        //     this.slotObject.brake[i].style.pointerEvents = "auto";
-        // }
+
         document.getElementById('linije').style.pointerEvents = 'auto'
         document.getElementById('stoper').removeEventListener('click', this.slotObject.zaustaviRotacijuEvent)
 
@@ -467,7 +462,25 @@ export default class SlotWeels extends DrawLines {
         document.getElementById('linija1').style.opacity = "1";
     }
 
-    dodalListenere() {
+    
+
+    zaustaviRotaciju() {
+
+        clearInterval(this.slotObject.progressInterval);
+
+        this.progresPomocnik()
+
+        this.stopSlots();
+
+    }
+
+    progresPomocnik() {
+        document.getElementById('preostalo').textContent = '5 sec';
+        document.getElementById('progressBar').value = 0;
+        document.getElementById('preostalo').style.visibility = 'hidden';
+    }
+
+	dodalListenere() {
         this.lining(document.getElementById('linije').getElementsByTagName('input'))
 
         document.getElementById('joker').addEventListener('click', this.jokerCheckboxEvent)
@@ -490,22 +503,6 @@ export default class SlotWeels extends DrawLines {
         document.getElementById('bet-button').addEventListener('click', this.slotObject.promeniBetIgreEvent);
         document.getElementById('game-button-nacin').addEventListener('click', this.slotObject.promeniNacinNagradjivanjaEvent);
 
-    }
-
-    zaustaviRotaciju() {
-
-        clearInterval(this.slotObject.progressInterval);
-
-        this.progresPomocnik()
-
-        this.stopSlots();
-
-    }
-
-    progresPomocnik() {
-        document.getElementById('preostalo').textContent = '5 sec';
-        document.getElementById('progressBar').value = 0;
-        document.getElementById('preostalo').style.visibility = 'hidden';
     }
 
     skiniListenere() {
@@ -543,7 +540,8 @@ export default class SlotWeels extends DrawLines {
 
     pomocnikRotacije() {
         this.skiniListenere();
-        this.rotateSlots([360, 360, 360, 360, 360])
+        
+		this.rotateSlots([360, 360, 360, 360, 360])
 
         console.log('jjj', this.jokerAdded)
 
@@ -561,6 +559,7 @@ export default class SlotWeels extends DrawLines {
         }
 
         console.log(sendObj)
+		
         this.postData('controller.php', sendObj)
             .then((data) => {
                 this.slotObject.pomagac--
