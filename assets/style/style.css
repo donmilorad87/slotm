@@ -3,72 +3,59 @@
 }
 
 body {
-
     text-align: center;
     margin: 0;
-
     -webkit-touch-callout: none;
-    /* iOS Safari */
     -webkit-user-select: none;
-    /* Safari */
     -khtml-user-select: none;
-    /* Konqueror HTML */
     -moz-user-select: none;
-    /* Old versions of Firefox */
     -ms-user-select: none;
-    /* Internet Explorer/Edge */
     user-select: none;
-
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-
+    display: grid;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-attachment: fixed;
 }
 
-
 .scene {
-
     margin: 156px 0px 155px;
     position: relative;
     width: 100%;
     width: -webkit-fill-available;
     height: 180px;
-
     transition: 0s;
     will-change: auto;
 }
 
-
-
 .carousel {
-  transform: translateZ(-336px);
+    transform: translateZ(-336px);
     height: 100%;
     transform-style: preserve-3d;
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: auto;
 }
 
-
-
 .carousel__cell {
-
     position: absolute;
     width: 100%;
-	height: 180px;
+    height: 180px;
     will-change: auto;
-
 }
 
 .carousel__cell p {
-	color: white;
-	will-change: auto;
+    color: white;
+    will-change: auto;
     height: 100%;
-	font-size: 8vw;
+    font-size: 8vw;
     font-weight: bold;
     height: -webkit-fill-available;
     width: 100%;
     width: -webkit-fill-available;
     margin: 0;
     box-shadow: 0px -1px 2px gray inset, 0px 0px 0px 3px white inset, 0px 1px 5px 2px black inset, 0px 15px 0px 3px rgba(255, 255, 255, 0.5) inset, 0px -8px 15px 0px black inset;
-	border:10px solid white;
+    border: 10px solid white;
 }
 
 .carousel__cell:nth-child(1) p {
@@ -106,12 +93,15 @@ body {
 .carousel__cell:nth-child(9) p {
     background: hsla(80, 100%, 50%, 1);
 }
+
 .carousel__cell:nth-child(10) p {
     background: hsla(120, 100%, 50%, 1);
 }
+
 .carousel__cell:nth-child(11) p {
     background: hsla(160, 100%, 50%, 1);
 }
+
 .carousel__cell:nth-child(12) p {
     background: hsla(200, 100%, 50%, 1);
 }
@@ -122,7 +112,6 @@ button::-moz-focus-inner {
 }
 
 button {
-
     display: inline-block;
     *display: inline;
     zoom: 1;
@@ -133,9 +122,7 @@ button {
     overflow: visible;
     font: bold 13px arial, helvetica, sans-serif;
     text-decoration: none;
-
     color: #555;
-
     background-color: #ddd;
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 1)), to(rgba(255, 255, 255, 0)));
     background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
@@ -143,7 +130,6 @@ button {
     background-image: -ms-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
     background-image: -o-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
     background-image: linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
-
     -webkit-transition: background-color .2s ease-out;
     -moz-transition: background-color .2s ease-out;
     -ms-transition: background-color .2s ease-out;
@@ -158,16 +144,12 @@ button {
     -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
     box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
     text-shadow: 0 1px 0 rgba(255, 255, 255, .9);
-
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-
-
-
     width: -webkit-fill-available;
     margin: 8px;
     width: calc(100% - 16px);
@@ -198,18 +180,14 @@ button[disabled]:active {
     cursor: default;
     position: static;
     color: #999;
-    /* Usually, !important should be avoided but here it's really needed :) */
     -moz-box-shadow: none !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
 }
 
-/* setting the dimensions */
 progress {
     display: block;
-    /* default: inline-block */
-
     width: 160px;
     padding: 4px;
     border: 0 none;
@@ -218,13 +196,22 @@ progress {
     box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
 }
 
-nav div, aside div, header div, .insajder, #kiki {background:white; border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;}
+nav div,
+aside div,
+header div,
+.insajder,
+#kiki {
+    background: white;
+    border: 1px solid gray;
+    border-radius: 6px;
+    margin: 8px;
+    box-shadow: 0 4px black;
+}
 
 progress::-moz-progress-bar {
     border-radius: 12px;
     background: #FFF;
     box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 5px 0px rgba(0, 0, 0, 0.3);
-
 }
 
 /* webkit */
@@ -245,22 +232,16 @@ progress::-webkit-progress-value {
 }
 
 @media (min-width:280px) {
-
     body {
-
         grid-template-areas: "head head head"
-            "nav  nav nav"
-            "main  main main"
-            "asi  asi asi"
-            "foot  foot foot";
-
-
-
+            "nav nav nav"
+            "main main main"
+            "asi asi asi"
+            "foot foot foot";
         grid-template-rows: auto;
         grid-template-columns: 1fr 1f3;
     }
 }
-
 
 @media (min-width:920px) {
     nav {
@@ -282,18 +263,19 @@ progress::-webkit-progress-value {
     }
 
     body {
-
         grid-template-areas: "head head head"
-							"nav  main asi"
-							"foot  foot foot";
+            "nav main asi"
+            "nav foot asi";
         grid-template-rows: 15vh 4fr 80px;
         grid-template-columns: 18% 64% 18%;
     }
 }
 
-.navdiv{background:whote;
-padding:8px;
-margin:8px;}
+.navdiv {
+    background: whote;
+    padding: 8px;
+    margin: 8px;
+}
 
 #preostalo {
     min-height: 18px;
@@ -301,21 +283,10 @@ margin:8px;}
 }
 
 #kiki .tg {
-
-
     float: left;
     width: 100%;
     width: -webkit-fill-available;
-
     margin: 1%;
-}
-
-
-body {
-    display: grid;
-    width: 100%;
-    height: 100%;
-
 }
 
 body>header {
@@ -333,14 +304,6 @@ body>aside {
     padding: 0px 16px;
 }
 
-
-body {
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-
-
-    background-attachment: fixed;
-}
-
 body>main {
     grid-area: main;
     max-width: 1000px;
@@ -350,18 +313,17 @@ body>main {
 
 body>footer {
     grid-area: foot;
-
 }
 
 td {
-
     background-color: #efefef;
-
-
 }
 
 .doigSpin {
-    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
+    border: 1px solid gray;
+    border-radius: 6px;
+    margin: 8px;
+    box-shadow: 0 4px black;
     margin-right: 8px;
     padding: 4px;
     background: white;
@@ -370,7 +332,6 @@ td {
     right: 16px;
 }
 
-
 .poljaTabKvote {
     background-color: greenyellow;
 }
@@ -378,34 +339,45 @@ td {
 .cz label,
 .cz input {
     pointer-events: none;
-
 }
 
 #jokerCont {
-	display:none;
-    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
-    padding: 1%;
-   
+    display: none;
+    border: 1px solid gray;
+    border-radius: 6px;
+    margin: 8px;
+    box-shadow: 0 4px black;
+    padding: 8px;
     background: white;
+}
 
-
-
+.jokerka {
+    width: 100%;
+    padding: 8px;
+    box-shadow: 0 4px black;
+    border: 1px solid gray;
+    border-radius: 6px;
 }
 
 .cz {
     width: 100%;
     width: -webkit-fill-available;
-    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
-
+    border: 1px solid gray;
+    border-radius: 6px;
+    margin: 8px;
+    box-shadow: 0 4px black;
     padding: 1%;
 }
 
 #kiki,
 .insajder {
     width: 100%;
-	width: -webkit-fill-available;
+    width: -webkit-fill-available;
     float: left;
-    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
+    border: 1px solid gray;
+    border-radius: 6px;
+    margin: 8px;
+    box-shadow: 0 4px black;
     display: block;
     overflow: hidden;
     padding: 1em;
@@ -413,61 +385,37 @@ td {
 }
 
 .insajder div {
-    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
+    border: 1px solid gray;
+    border-radius: 6px;
+    margin: 8px;
+    box-shadow: 0 4px black;
     margin-right: 8px;
     padding: 4px;
     background: white;
-	
 }
 
 #linije {
-	
-	display:none;
-	
+    display: none;
 }
+
 #linije div {
     position: relative;
     display: flex;
-    border:1px solid gray; border-radius:6px; margin:8px; box-shadow:0 4px black;
+    border: 1px solid gray;
+    border-radius: 6px;
+    margin: 8px;
+    box-shadow: 0 4px black;
     width: 100%;
     width: -webkit-fill-available;
-  
-    padding: 8px;
     background: white;
-
 }
 
-#linije label { 
-
-
+#linije label {
     width: 100%;
-    position: absolute;
-    left: 10px;
-    height: 100%;
-    top: 0;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    font-size: 14px;
-
-
+    padding: 8px;
 }
-
-
-
 
 .okvir {
-
     border: solid #3c0081;
     width: 100%;
     position: absolute;
@@ -476,29 +424,19 @@ td {
     border-width: 10px;
     left: 0;
     z-index: 9;
-
     border-radius: 12px;
 }
 
 #spinovi {
-   
     display: flex;
-   
     padding: 10px;
     height: auto;
     position: relative;
-	margin-bottom: 22px;
+    margin-bottom: 22px;
 }
-
 
 #buttonContainer {
     display: flex;
-
-
-}
-
-#buttonContainer button {
-    float: left;
 }
 
 .progresCont {
@@ -508,27 +446,21 @@ td {
     padding: 6px 20px;
 }
 
-#buttonContainer div,
-header, footer,
-.carousel__cell p {
-
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-
+#linije>div:first-child,
+.gozma:first-child,
+.gigozma:first-child,
+.cosma:first-child {
+    background: lightgreen;
 }
-.midMid {
 
+.jokerka,
+#winwerDiv,
+#winwerDiv2,
+#linije label,
+#buttonContainer div,
+header,
+footer div,
+.carousel__cell p {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -542,4 +474,15 @@ header, footer,
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
+}
+
+label:hover,
+.cz:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    display: none;
 }
