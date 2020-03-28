@@ -21,7 +21,7 @@ export default class DrawLines {
         this.ctx.strokeStyle = this.r
 	
         this.linez = [1, 0, 0, 0, 0, 0, 0]
-
+		this.jokerAdded = false
 		this.dzoker = 0
         this.r = 'rgba(60, 0, 129, 0.4)';
 
@@ -226,13 +226,13 @@ export default class DrawLines {
         this.linez.map(items => (items === 1) ? y++ : 0);
 
         if (y === 1) {
-
+console.log('ovde smo333', parseInt(document.getElementById('igraUlog').textContent) + parseInt(document.getElementById('igraDzoker').textContent.match(/\d+/g).map(Number)[0]), parseInt(document.getElementById('igraUlog').textContent), parseInt(document.getElementById('igraDzoker').textContent.match(/\d+/g).map(Number)[0]))
             document.getElementById('linije').querySelector('input:checked').disabled = true
             document.getElementById('igraBrojLinija').textContent = 1
             document.getElementById('ukupanulog').textContent = parseInt(document.getElementById('igraUlog').textContent) + parseInt(document.getElementById('igraDzoker').textContent.match(/\d+/g).map(Number)[0])
         } else {
 			
-          
+					console.log('nme mozemo biti ovde')
                 document.getElementById('igraBrojLinija').textContent = y
                 document.getElementById('ukupanulog').textContent = y *  parseInt(document.getElementById('igraUlog').textContent) +  parseInt(document.getElementById('igraDzoker').textContent.match(/\d+/g).map(Number)[0])
      
@@ -494,7 +494,7 @@ export default class DrawLines {
     }
 
     obrisiDzokera() {
-
+		
         this.text.textContent = " NE (0 $)";
         document.getElementById('ukupanulog').textContent = document.getElementById('igraBrojLinija').textContent * document.getElementById('igraUlog').textContent
        
