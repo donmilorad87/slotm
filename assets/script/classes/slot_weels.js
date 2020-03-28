@@ -132,14 +132,27 @@ export default class SlotWeels extends DrawLines {
             if (this.slotObject.nag2.checked) {
                 this.slotObject.ukupanulog.textContent = this.slotObject.ulog
             } else {
-                this.slotObject.ukupanulog.textContent = this.brojacLinija() * this.slotObject.ulog +  this.slotObject.ulog*5
+                this.slotObject.ukupanulog.textContent = this.brojacLinija() * this.slotObject.ulog + this.getVrednostDzokera(this.slotObject.ulog)
             }
         } else {
-            return this.brojacLinija() * this.slotObject.ulog + this.slotObject.ulog*5
+            return this.brojacLinija() * this.slotObject.ulog + this.getVrednostDzokera(this.slotObject.ulog)
         }
     }
 
 
+	  getVrednostDzokera(x) {
+
+        if (this.jokerAdded) {
+
+            this.vrednostDzokera = x * 5
+        } else {
+            this.vrednostDzokera = 0
+        }
+
+        return this.vrednostDzokera
+
+
+    }
 
     checkNacin(x) {
 
@@ -175,8 +188,8 @@ export default class SlotWeels extends DrawLines {
             if (this.jokerAdded) {
 
                 this.dodajDzokera(this.kkk1, this.kkk2)
-				
-                this.slotObject.igradzoker.textContent = 'DA (' + this.slotObject.ulog*5 + ' $)'
+
+                this.slotObject.igradzoker.textContent = 'DA (' + this.getVrednostDzokera(this.slotObject.ulog) + ' $)'
                 document.getElementById('joker').checked;
                 document.getElementById('joker').disabled;
             }
@@ -227,7 +240,7 @@ export default class SlotWeels extends DrawLines {
         if (this.slotObject.nag2.checked) {
             this.slotObject.ukupanulog.textContent = x
         } else {
-            this.slotObject.ukupanulog.textContent = this.brojacLinija() * x + x*5
+            this.slotObject.ukupanulog.textContent = this.brojacLinija() * x + this.getVrednostDzokera(x)
         }
 
         if (this.jokerAdded) {
@@ -335,17 +348,12 @@ export default class SlotWeels extends DrawLines {
 
         this.perspectiveHelper('100%', '0', 'block', 'block', this.brojacLinija())
 		spinovi.style.cssText = 'overflow:hidden; margin-bottom: 18px;'
-		  if (this.jokerAdded) {
-		this.slotObject.ukupanulog.textContent = this.slotObject.ulog * this.brojacLinija() + this.slotObject.ulog*5
-		  }
-		 else{
-			this.slotObject.ukupanulog.textContent = this.slotObject.ulog * this.brojacLinija()
-		 }
+        this.slotObject.ukupanulog.textContent = this.slotObject.ulog * this.brojacLinija() + this.getVrednostDzokera(this.slotObject.ulog)
 
     }
 
     perspectiveYes() {
-		
+
         this.ocistiCanvas()
 
         for (let i = 0; i < 5; i++) {
@@ -617,7 +625,7 @@ export default class SlotWeels extends DrawLines {
         
 		this.rotateSlots([360, 360, 360, 360, 360])
 
-
+        console.log('jjj', this.jokerAdded)
 
         
 
@@ -764,7 +772,7 @@ export default class SlotWeels extends DrawLines {
 
             this.slotObject.brojKredita = 0
             this.slotObject.brojkreditadiv.textContent = 0
-
+            console.log('varate, zbog toga su vam oduzeti svi krediti')
         }
 
     }
