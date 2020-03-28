@@ -4,27 +4,30 @@ export default class DrawLines {
 
     constructor() {
 	
-        this.linez = [1, 0, 0, 0, 0, 0, 0]
-        this.kockice
-        this.dzoker = 0
-		this.vrednostDzokera = 0
+		
+		this.c = document.getElementById("myCanvas");
+        this.ctx = this.c.getContext("2d");
+		this.width = this.c.offsetWidth;      
+        this.c.setAttribute('height', document.getElementById('spinovi').offsetHeight)
+        this.c.setAttribute('width', this.width)
+		
+        this.halfStep = ((document.getElementById('spinovi').offsetHeight / 3) / 2);
+        this.middle = 3 * this.halfStep
+        this.down = 5 * this.halfStep
 
-        this.kkk1;
-        this.kkk2;
-        this.jokerAdded = false;
-        this.img = new Image();
-
-        this.pomocniNiz = [];
+        this.halfStepW = (this.width / 5) / 2;
+		 this.ctx.lineWidth = 10;
+        this.ctx.font = "20px Arial";
+        this.ctx.strokeStyle = this.r
 	
+        this.linez = [1, 0, 0, 0, 0, 0, 0]
+
+		this.dzoker = 0
         this.r = 'rgba(60, 0, 129, 0.4)';
 
         this.text = document.getElementById('igraDzoker')
 
         this.myVideoEndedHandler = this.myListener.bind(this);
-        this.myloader2;
-		this.myloader3
-		this.myloader4
-        //this.nacrtajLiniju(0)
 
         this.lining(document.getElementById('linije').getElementsByTagName('input'));
 
@@ -38,7 +41,7 @@ export default class DrawLines {
         if (document.getElementById('joker').checked == true) {
 
             this.brojacKockica()
-            document.getElementById('igraBrojLinija').textContent = this.brojacLinija()
+            this.brojacLinija()
             this.crtacKockica()
             document.getElementById('linije').style.display = 'none'
 
@@ -68,7 +71,7 @@ export default class DrawLines {
 						
         }
 		
-		console.log(x[0].disabled)
+
 		x[0].disabled = true
 		x[1].disabled = true
 		
@@ -126,6 +129,10 @@ export default class DrawLines {
             [3, 5],
             [3, 7]
         ]
+		
+
+		
+		
         for (let i = 0; i < mapaDzokera[this.dzoker - 1].length; i++) {
             if (mapaDzokera[this.dzoker - 1][i] === x) {
                 this.pomocniNiz[i] = x
@@ -186,10 +193,10 @@ export default class DrawLines {
 	
 	lineCheckHelperFullHelper(x){
 
-		if (x.value == 1) {
+		if (!x.checked) {
 
                 this.linez[x.name] = 0;
-                x.value = 0;
+
 				x.parentElement.style.background = 'white'
 				
                 this.ocistiCanvas()
@@ -198,7 +205,7 @@ export default class DrawLines {
             } else {
 
                 this.linez[x.name] = 1;
-                x.value = 1;
+
 				x.parentElement.style.background = 'lightgreen'
 				
 				 this.nacrtajLiniju(parseInt(x.name))
@@ -212,7 +219,7 @@ export default class DrawLines {
 	}
  
 
-    brojacLinija(xxx = 0) {
+    brojacLinija() {
 
         let y = 0;
 
@@ -222,26 +229,25 @@ export default class DrawLines {
 
             document.getElementById('linije').querySelector('input:checked').disabled = true
             document.getElementById('igraBrojLinija').textContent = 1
-            document.getElementById('ukupanulog').textContent = 1 * document.getElementById('igraUlog').textContent + document.getElementById('igraDzoker').textContent.match(/\d+/g).map(Number)[0]
+            document.getElementById('ukupanulog').textContent = parseInt(document.getElementById('igraUlog').textContent) + parseInt(document.getElementById('igraDzoker').textContent.match(/\d+/g).map(Number)[0])
         } else {
-            if (document.getElementById('nag2').checked === false) {
+			
+          
                 document.getElementById('igraBrojLinija').textContent = y
-                document.getElementById('ukupanulog').textContent = y * document.getElementById('igraUlog').textContent + document.getElementById('igraDzoker').textContent.match(/\d+/g).map(Number)[0]
-            }
-			if (xxx === 0) {
+                document.getElementById('ukupanulog').textContent = y *  parseInt(document.getElementById('igraUlog').textContent) +  parseInt(document.getElementById('igraDzoker').textContent.match(/\d+/g).map(Number)[0])
+     
+		
 				if (document.getElementById('linije').querySelector('input:disabled')) {
 					
 					document.getElementById('linije').querySelector('input:disabled').disabled = false
 				}
-            }
+       
 
         }
 
-        if (xxx === 0) {
+       
             return y
-        } else {
-            return this.linez
-        }
+        
 
     }
 
@@ -253,7 +259,7 @@ export default class DrawLines {
         this.kockice = new Array(15).fill(0);
 		
 		let x = document.getElementById('linije').getElementsByTagName('input');
-		console.log(x[0].checked)
+
 		let niz = [
 		[5,6,7,8,9],
 		[0,1,2,3,4],
@@ -350,7 +356,7 @@ export default class DrawLines {
     }
 	
 	myListenerCaseHelper(x,y){
-		console.log(x,y)	
+	
 		let help;
 		if(x > 0 && x < 1){
 			help = 0
@@ -423,12 +429,13 @@ export default class DrawLines {
 				break; 	
 			}
 		
-		console.log(help)
+	
 		
 	}
 	
 	myListenerCaseHelper3(x){
-		console.log(x)
+
+
 		let niz = [
 		[0,0,1,(this.linez[1] > 0) ? 2 : 0, (this.linez[5] > 0) ? 6 : 0],
 		[2 * this.halfStepW, 0, 2, (this.linez[1] > 0) ? 2 : 0, (this.linez[4] > 0) ? 5 : 0],
@@ -458,19 +465,20 @@ export default class DrawLines {
 
                     if (this.dzoker !== (x+1)) {
 
-                       this.ocistiCanvas()
+                        this.ocistiCanvas()
                         this.crtacKockica()
                         this.pomocniNiz=[]
+
 						for(let i=2; i<niz[x].length;i++){
 							if(i === 2){
 								this.dodajDzokera(niz[x][0], niz[x][1], niz[x][2])
+							
+								this.dzoker = niz[x][2]
 							}else{
 								this.pomocniNiz.push(niz[x][i]);
 							}
 							
 						}
-						
-						
                     }
                 }
 	}
@@ -519,22 +527,24 @@ export default class DrawLines {
             ke = y + ((2 * this.halfStep - this.img.width) / 2)
             this.ctx.drawImage(this.img, x, ke, w * sizer, h * sizer);
         }
-
-        if (document.getElementById('snimiDzokera')) {
-
-        } else {
-            if (document.getElementById('izbrisiDzokera')) {
-
-            } else {
+		
+		
+		
+		
+        if (!document.getElementById('snimiDzokera')) {
+				
+            if (!document.getElementById('izbrisiDzokera')) {
+		
                 if (document.getElementById('joker').checked) {
                     let dugme = document.createElement('button')
-                    dugme.textContent = 'Snimi Dzokera'
-                    dugme.id = 'snimiDzokera'
-                    dugme.className = 'snimidzokeraklasa'
-                    jokerCont.appendChild(dugme);
+						dugme.textContent = 'Snimi Dzokera'
+						dugme.id = 'snimiDzokera'
+						dugme.className = 'snimidzokeraklasa'
+						jokerCont.appendChild(dugme);
 					
 					this.myloader3 = this.snimiDzokera.bind(this, z);
 					
+				
                     document.getElementById('snimiDzokera').addEventListener('click', this.myloader3);
                 }
             }
@@ -544,17 +554,22 @@ export default class DrawLines {
 		
 
     snimiDzokera(x) {
+		
+		
 		this.dzoker = x
 		this.vrednostDzokera = document.querySelector('input[name="bet"]:checked').value * 5
         this.text.textContent = " DA (" + (document.querySelector('input[name="bet"]:checked').value) * 5 + " $)";
         let xx = (document.querySelector('input[name="bet"]:checked').value) * 5
         document.getElementById('ukupanulog').textContent = document.getElementById('igraBrojLinija').textContent * document.querySelector('input[name="bet"]:checked').value + xx
-        this.ocistiCanvas()
+        
+		this.ocistiCanvas()
         this.lineCheck()
         this.dodajDzokera(this.kkk1, this.kkk2)
+		
 
         document.getElementsByClassName('snimidzokeraklasa')[0].style.display = 'none'
-        this.mojBrisac()
+        
+		this.mojBrisac()
         this.jokerAdded = true
 
         let dugme = document.createElement('button')
@@ -590,41 +605,11 @@ export default class DrawLines {
 
     }
 
-    nacrtajBrojRav(x, y) {
 
-        for (let i = 2; i < 9; i += 2) {
-
-            this.ctx.lineWidth = 1;
-            this.ctx.beginPath();
-            this.ctx.arc(i * this.halfStepW - 1, y, 10, 0, 2 * Math.PI);
-            this.ctx.fillStyle = 'white';
-            this.ctx.fill();
-            this.ctx.stroke()
-
-            this.ctx.fillStyle = 'black';
-
-            this.ctx.fillText(x, i * this.halfStepW - 7, y + 7);
-        }
-
-    }
-    nacrtajBroj(x, y, z) {
-
-        this.ctx.lineWidth = 1;
-        this.ctx.beginPath();
-        this.ctx.arc(y, z, 10, 0, 2 * Math.PI);
-        this.ctx.fillStyle = 'white';
-        this.ctx.fill();
-        this.ctx.stroke()
-
-        this.ctx.fillStyle = 'black';
-
-        this.ctx.fillText(x, y - 6, z + 7);
-
-    }
 	
 	nacrtajLiniju(x){
 		
-		console.log('path', x)
+
 		
 		let path = [
 		[
@@ -694,29 +679,11 @@ export default class DrawLines {
 
 		this.ctx.lineWidth = 10;
        
-        
-
-
-
-		
 	} 
 
 
     ocistiCanvas() {
-		this.c = document.getElementById("myCanvas");
-        this.ctx = this.c.getContext("2d");
-		this.width = this.c.offsetWidth;      
-        this.c.setAttribute('height', document.getElementById('spinovi').offsetHeight)
-        this.c.setAttribute('width', this.width)
 		
-        this.halfStep = ((document.getElementById('spinovi').offsetHeight / 3) / 2);
-        this.middle = 3 * this.halfStep
-        this.down = 5 * this.halfStep
-
-        this.halfStepW = (this.width / 5) / 2;
-		 this.ctx.lineWidth = 10;
-        this.ctx.font = "20px Arial";
-        this.ctx.strokeStyle = this.r
 
         this.ctx.clearRect(0, 0, this.c.width, this.c.height);
         this.img = new Image();
